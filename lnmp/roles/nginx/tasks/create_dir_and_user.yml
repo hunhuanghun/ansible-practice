@@ -1,0 +1,11 @@
+- name: 创建nginx目录
+  file: path={{ item }} state=directory
+  with_items:
+    - "{{ nginx_install_path }}"
+    - "{{ nginx_logdir }}"
+    - "{{ nginx_tmp_dir }}"
+- name: 创建nginx运行用户组
+  group: name={{ nginx_run_group }} state=present system=no
+
+- name: 创建nginx运行用户
+  user: name={{ nginx_run_user }} group={{ nginx_run_group }} state=present

@@ -1,0 +1,4 @@
+nginx: nginx_centos
+nginx_server: nginx
+nginx_config: nginx.conf
+nginx_path: /etc/init.d/

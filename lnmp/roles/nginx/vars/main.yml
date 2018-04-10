@@ -1,0 +1,16 @@
+#======================路径========================
+nginx_install_path: "/data/app/nginx"
+nginx_logdir: "/data/log/nginx"
+nginx_tmp_dir: "/data/init/nginx"
+nginx_install_parent_path: "/data/app"
+nginx_exe_path: "/etc/init.d"
+nginx_exe_path16: "/lib/systemd/system"
+nginx_run_user: "www-data"
+nginx_run_group: "www-data"
+nginx_install_file: "tpl.test.com.conf"
+nginx_config_file: "nginx.conf"
+nginx_logrotate_file: "nginx_logrotate"
+#======================ansible console===================
+nginx_config_path: "nginx_config"
+
+

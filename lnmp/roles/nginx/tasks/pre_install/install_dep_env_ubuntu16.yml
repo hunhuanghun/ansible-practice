@@ -1,0 +1,28 @@
+- name: update
+  shell: apt-get update
+  register: update_result
+  ignore_errors: True
+
+- name: dpkg --configure -a
+  shell: dpkg --configure -a
+  when: update_result is failed
+
+- name: 安装nginx依赖环境
+  apt: name={{ item }} state=latest
+  with_items:
+    - unzip
+    - gcc
+    - g++
+    - make 
+    - libpcre3 
+    - libpcre3-dev
+    - libssl-dev
+    - openssl 
+    - libgd-dev
+    - libgeoip-dev
+    - tofrodos 
+    - libpam0g-dev
+    - perl 
+    - libperl-dev
+    - libxslt-dev
+    - dos2unix

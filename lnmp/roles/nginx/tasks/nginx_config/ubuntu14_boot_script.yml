@@ -1,0 +1,9 @@
+- name: scp nginx boot script to remote machine
+  copy: src={{ nginx_config_path }}/nginx_ubuntu12 dest={{ nginx_exe_path }}/nginx
+- name: config nginx boot script
+  shell: "{{ item }}"
+  with_items:
+    - chmod 755 {{ nginx_exe_path }}/nginx
+    - "{{ chg_unix_comm }} {{ nginx_exe_path }}/nginx"
+    - chmod +x {{ nginx_exe_path }}/nginx
+    - update-rc.d nginx defaults

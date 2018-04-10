@@ -1,0 +1,2 @@
+- name: start for {{ ansible_distribution }} 
+  service: name=nginx state=started

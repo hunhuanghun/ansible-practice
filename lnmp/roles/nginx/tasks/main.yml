@@ -1,0 +1,17 @@
+---
+- include_tasks: create_dir_and_user.yml
+
+- include_tasks: pack_dis.yml
+
+- include_tasks: pre_install/install_dep_env_{{ ansible_distribution|lower }}{{ ansible_distribution_major_version }}.yml
+
+- include_tasks: install_module_1.12.2.yml
+  when: nginx_ver == "nginx-1.12.2"
+
+- include_tasks: install_nginx_1.12.2.yml
+  when: nginx_ver == "nginx-1.12.2"
+
+- include_tasks: pre_install/luajit_config_{{ ansible_distribution|lower }}.yml
+
+- include_tasks: nginx_1.12.2_config.yml
+- include_tasks: nginx_start.yml

@@ -1,0 +1,6 @@
+- name: judge luajit exists
+  shell: test ! -e /usr/lib64/libluajit-5.1.so.2
+  register: result
+- name: make soft link for luajit
+  file: src=/usr/local/lib/libluajit-5.1.so.2.0.4 dest=/usr/lib64/libluajit-5.1.so.2 state=link
+  when: result is success

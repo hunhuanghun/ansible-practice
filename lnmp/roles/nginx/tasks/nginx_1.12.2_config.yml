@@ -1,0 +1,84 @@
+- name: judge /usr/sbin/nginx exists
+  shell: test ! -h /usr/sbin/nginx
+  register: result1
+  ignore_errors: True
+
+- name: make soft link for /usr/sbin/nginx 
+  file: src={{ nginx_install_path }}/sbin/nginx dest=/usr/sbin/nginx state=link
+  when: result1 is success
+
+- name: judge /etc/init.d/nginx exists
+  shell: test -f /etc/init.d/nginx
+  register: result2 
+  ignore_errors: True
+
+- name: bak /etc/init.d/nginx
+  shell: mv /etc/init.d/nginx /etc/init.d/nginx.`date +%Y%m%d`
+  when: result2 is success
+
+- name: Configuring the nginx boot script for {{ ansible_distribution }} {{ ansible_distribution_major_version }}
+  include_tasks: nginx_config/{{ ansible_distribution|lower }}{{ ansible_distribution_major_version }}_boot_script.yml
+
+- name: mkdir {{ nginx_install_path }}/body_temp {{ nginx_install_path }}/proxy_temp
+  file: path={{ nginx_install_path }}/{{ item }} state=directory owner={{ nginx_run_user }} group={{ nginx_run_group }}
+  with_items:
+    - body_temp
+    - proxy_temp
+
+- name: mkdir {{ nginx_install_path }}/conf/conf.d
+  file: path={{ nginx_install_path }}/conf/conf.d state=directory
+
+- name: config {{ nginx_install_file }}
+  copy: src={{ nginx_config_path }}/{{ item.name }} dest={{ item.dir }}
+  with_items:
+    - { name: "{{ nginx_install_file }}", dir: "{{ nginx_install_path }}/conf/conf.d/{{ nginx_install_file }}" }
+    - { name: "{{ nginx_config_file }}", dir: "{{ nginx_install_path }}/conf/{{ nginx_config_file }}" }
+    - { name: "{{ nginx_logrotate_file }}", dir: "/etc/logrotate.d/nginx" }
+
+#- name: import {{ ansible_distribution }} variables
+#  include_vars:
+#    file: "{{ nginx_vars_path }}/{{ ansible_distribution }}_{{ ansible_distribution_major_version }}.yml"
+#    name: chg
+
+- name: change dos to unix format
+  shell: "{{ chg_unix_comm }} {{ item }}"
+  with_items:
+    - "{{ nginx_install_path }}/conf/conf.d/{{ nginx_install_file }}" 
+    - "{{ nginx_install_path }}/conf/{{ nginx_config_file }}"
+    - "/etc/logrotate.d/nginx"
+
+- name: nginx logrotate
+  shell: /usr/sbin/logrotate -f /etc/logrotate.d/nginx
+
+- name: create php test case
+  shell: "{{ item }}" 
+  with_items:
+    - echo '<?php' > {{ nginx_install_path }}/html/info.php
+    - echo 'phpinfo();' >> {{ nginx_install_path }}/html/info.php
+
+- name: judge /etc/nginx exists
+  shell: test ! -d /etc/nginx
+  register: result3
+  ignore_errors: True
+
+- name: make soft link for /etc/nginx
+  file: src={{ nginx_install_path }}/conf dest=/etc/nginx state=link
+  when: result3 is success
+
+- name: make soft link for /etc/nginx step1
+  shell: mv /etc/nginx /etc/nginx.bak.`date +%F`
+  when: result3 is failed
+
+- name: make soft link for /etc/nginx step2
+  file: src={{ nginx_install_path }}/conf dest=/etc/nginx state=link
+  when: result3 is failed
+
+- name: make soft link for nginx log
+  file: src={{ nginx_logdir }} dest=/var/log/nginx state=link
+
+- name: test nginx syntax 
+  shell: nginx -t
+  register: result4
+  ignore_errors: True
+
+

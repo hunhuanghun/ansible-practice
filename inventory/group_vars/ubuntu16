@@ -1,0 +1,2 @@
+chg_unix_comm: "dos2unix"
+ansible_python_interpreter: /usr/bin/python3

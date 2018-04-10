@@ -1,0 +1,4 @@
+- name: nginx start on boot for Ubuntu_12.04
+  include: nginx_config/ubuntu_12.04_nginx_config.yml
+  ignore_errors: True
+  when: ansible_distribution|lower == "ubuntu" and ansible_distribution_major_version == "12"

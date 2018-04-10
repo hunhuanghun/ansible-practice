@@ -1,0 +1,9 @@
+- name: scp nginx boot script to remote machine
+  copy: src={{ nginx_config_path }}/nginx_centos6 dest={{ nginx_exe_path }}/nginx
+- name: config nginx boot script
+  shell: "{{ item }}"
+  with_items:
+    - "{{ chg_unix_comm }} {{ nginx_exe_path }}/nginx"
+    - chmod 755 {{ nginx_exe_path }}/nginx
+    - chkconfig --add nginx
+    - chkconfig --level 2345 nginx on

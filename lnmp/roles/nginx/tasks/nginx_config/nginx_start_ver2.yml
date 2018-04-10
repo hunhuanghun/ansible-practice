@@ -1,0 +1,3 @@
+- name: start for {{ ansible_distribution }}
+  shell: systemctl daemon-reload
+  service: name=nginx state=start

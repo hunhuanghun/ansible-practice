@@ -1,0 +1,6 @@
+- name: 解压nginx安装包
+  shell: cd {{ nginx_tmp_dir }} && tar -xzf nginx-1.12.2.tar.gz
+- name: 编译nginx
+  shell: "{{ item }}"
+  with_items: 
+    - cd {{ nginx_tmp_dir }}/nginx-1.12.2 && /sbin/ldconfig && ./configure --prefix={{ nginx_install_path }} --conf-path={{ nginx_install_path }}/conf/nginx.conf --http-client-body-temp-path={{ nginx_install_path }}/body_temp --http-proxy-temp-path={{ nginx_install_path }}/proxy_temp  --error-log-path={{ nginx_logdir }}/error.log --http-log-path={{ nginx_logdir }}/access.log --with-http_addition_module --with-http_dav_module --with-http_geoip_module --with-http_gzip_static_module --with-http_image_filter_module --with-http_stub_status_module --with-http_ssl_module --with-http_sub_module --with-http_realip_module --add-module={{ nginx_tmp_dir }}/ngx_http_auth_pam_module-1.5.1 --add-module={{ nginx_tmp_dir }}/headers-more-nginx-module-0.32 --add-module={{ nginx_tmp_dir }}/ngx_devel_kit-0.3.0 --add-module={{ nginx_tmp_dir }}/echo-nginx-module-0.61 --add-module={{ nginx_tmp_dir }}/lua-nginx-module-0.10.11 --add-module={{ nginx_tmp_dir }}/nginx-dav-ext-module-0.1.0 && make && make install

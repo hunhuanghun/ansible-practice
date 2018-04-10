@@ -1,0 +1,4 @@
+- name: 将安装包分发到各主机种
+  copy: src={{ item }} dest={{ nginx_tmp_dir }}
+  with_fileglob:
+    - "{{ nginx_ver }}/*"

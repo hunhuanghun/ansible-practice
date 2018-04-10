@@ -1,0 +1,7 @@
+- name: scp nginx boot script to remote machine
+  copy: src={{ nginx_config_path }}/nginx_ubuntu16 dest={{ nginx_exe_path16 }}/nginx.service
+- name: config nginx boot script
+  shell: "{{ item }}"
+  with_items:
+    - chown root.root {{ nginx_exe_path16 }}/nginx.service
+    - systemctl enable nginx.service

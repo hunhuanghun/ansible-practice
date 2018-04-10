@@ -1,0 +1,17 @@
+- name: 安装nginx依赖环境
+  yum: name={{ item }} state=present
+  with_items:
+    - unzip
+    - gcc
+    - gcc-c++
+    - make 
+    - pcre-devel
+    - openssl
+    - openssl-devel 
+    - gd-devel
+    - pam-devel
+    - expat-devel
+    - GeoIP-devel
+    - perl 
+    - perl-devel
+    - dos2unix

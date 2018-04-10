@@ -1,0 +1,3 @@
+nginx: nginx_centos7
+nginx_server: nginx.serv
+nginx_config: nginx.conf
