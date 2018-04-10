@@ -1,6 +1,6 @@
 ---
 - hosts: centos6
-  gather_facts: no
+#  gather_facts: no
   remote_user: root
   roles:
     - { role: nginx, nginx_ver: nginx-1.12.2 }
