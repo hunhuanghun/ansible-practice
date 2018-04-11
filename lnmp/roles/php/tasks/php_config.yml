@@ -1,0 +1,22 @@
+---
+- name: php-fpm follow up steps
+  shell: "{{ item }}"
+  with_items:
+    - cd {{ php_tmp_dir }}/{{ php_ver }} && cp php.ini-production {{ php_install_dir }}/lib/php.ini
+    - cd {{ php_tmp_dir }}/{{ php_ver }} && cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
+    - chmod +x /etc/init.d/php-fpm
+    - cd {{ php_install_dir }}/etc/ && cp php-fpm.conf.default php-fpm.conf && cp php-fpm.d/www.conf.default php-fpm.d/www.conf
+
+#- name: php join system service on {{ ansible_distribution }}
+#  shell: "{{ item }}"
+#  with_items:
+#    - chkconfig --add php-fpm
+#    - chkconfig --level 2345 php-fpm on
+#  when: ansible_distribution|lower == "centos"
+#
+#- name: php join system service on {{ ansible_distribution }}
+#  shell: update-rc.d php-fpm defaults
+#  when: ansible_distribution|lower == "ubuntu"
+
+- name: start php-fpm
+  service: name=php-fpm state=started enabled=yes

@@ -1,0 +1,6 @@
+---
+- name: untar {{ php_ver }} package
+  shell: cd {{ php_tmp_dir }} && tar -xzf {{ php_ver }}.tar.gz
+
+- name: Compile and install php
+  shell: cd {{ php_tmp_dir }}/{{ php_ver }} && ./configure --prefix={{ php_install_dir }} --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-freetype-dir --with-jpeg-dir --with-png-dir --with-iconv --with-openssl --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --enable-mbregex --enable-mbstring --with-mcrypt --with-gd --enable-fpm --enable-gd-native-ttf --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-soap --enable-short-tags --enable-static --with-xsl --with-fpm-user=www-data --with-fpm-group=www-data --enable-ftp --with-gettext --enable-zip --enable-opcache && make && make install

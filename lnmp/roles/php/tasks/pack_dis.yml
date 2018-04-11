@@ -1,0 +1,7 @@
+---
+- name: mkdir {{ php_tmp_dir }}
+  file: path={{ php_tmp_dir }} state=directory
+- name: Distribute the PHP installation package to the remote host
+  copy: src={{ item }} dest={{ php_tmp_dir }}
+  with_fileglob:
+    - "{{ php_ver }}/*"

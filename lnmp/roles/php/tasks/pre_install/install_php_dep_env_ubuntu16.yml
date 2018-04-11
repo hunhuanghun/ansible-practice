@@ -1,0 +1,20 @@
+- name: install php dependency pack on {{ ansible_distribution|lower }}{{ ansible_distribution_major_version }}
+  apt: name={{ item }} state=latest
+  with_items:
+    - libxml2-dev
+    - build-essential
+    - openssl
+    - libcurl4-openssl-dev
+    - libssl-dev
+    - make 
+    - curl
+    - libjpeg-dev
+    - libpng-dev
+    - libmcrypt-dev
+    - libreadline6
+    - libreadline6-dev
+    - libfreetype6-dev
+    - libxslt-dev
+
+- name: install libcurl4
+  apt: name=libcurl4-gnutls-dev state=latest

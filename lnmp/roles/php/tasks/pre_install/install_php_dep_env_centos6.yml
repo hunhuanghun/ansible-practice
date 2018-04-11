@@ -1,0 +1,19 @@
+- name: install php dependency pack on {{ ansible_distribution|lower }}{{ ansible_distribution_major_version }}
+  yum: name={{ item }} state=present
+  with_items:
+    - libjpeg-devel
+    - curl-devel
+    - libpng-devel 
+    - freetype-devel
+    - libcurl-devel
+    - libpng-devel 
+    - libicu-devel
+    - openldap-devel
+    - libmcrypt-devel
+    - libxml2-devel
+    - openssl
+    - openssl-devel
+    - readline
+    - readline-devel
+    - libxslt
+    - libxslt-devel

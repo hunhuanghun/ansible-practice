@@ -1,0 +1,3 @@
+---
+php_tmp_dir: "/data/init/php"
+php_install_dir: "/data/app/php"
