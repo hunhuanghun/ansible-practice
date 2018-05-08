@@ -1,0 +1,6 @@
+---
+- hosts: ubuntu16
+#  gather_facts: no
+  remote_user: root
+  roles:
+    - { role: basic_env }

@@ -1,0 +1,39 @@
+- name: apt update
+  apt: update_cache=yes 
+- name: install base rpm pack on {{ ansible_distribution|lower }}{{ ansible_distribution_major_version }}
+  apt: name={{item}} state=latest
+  with_items:
+    - tofrodos
+    - curl
+    - automake
+    - make
+    - gcc
+    - g++
+    - unzip
+    - lrzsz
+    - vim
+    - snmpd
+    - screen
+    - sysstat
+    - libtool
+    - iotop
+    - lbzip2
+    - gdb
+    - iftop
+    - nethogs
+    - expect
+    - linux-image-generic
+    - atop
+    - python-dev
+
+- name: bakup /etc/pam.d/commonsession
+  shell: "[ -f /etc/pam.d/common-session ] && cp /etc/pam.d/common-session /etc/pam.d/common-session.bak_`date +%s`"
+
+- name: update /etc/pam.d/commonsession
+  copy: src=common-session dest=/etc/pam.d/common-session
+
+- name: dos2unix /etc/pam.d/common-session
+  shell: dos2unix /etc/pam.d/common-session
+
+- name: delete user ubuntu
+  user: name=ubuntu state=absent

@@ -1,0 +1,37 @@
+- name: update
+  shell: apt-get update
+  register: update_result
+  ignore_errors: True
+
+- name: dpkg --configure -a
+  shell: dpkg --configure -a
+  when: update_result is failed
+
+- name: install base rpm pack on {{ ansible_distribution|lower }}{{ ansible_distribution_major_version }}
+  apt: name={{item}} state=latest
+  with_items:
+    - tofrodos
+    - curl
+    - automake
+    - make
+    - gcc
+    - g++
+    - unzip
+    - lrzsz
+    - vim
+    - snmpd
+    - screen
+    - sysstat
+    - libtool
+    - iotop
+    - lbzip2
+    - gdb
+    - iftop
+    - nethogs
+    - expect
+    - linux-image-generic
+    - atop
+    - python-dev
+
+- name: delete user ubuntu
+  user: name=ubuntu state=absent

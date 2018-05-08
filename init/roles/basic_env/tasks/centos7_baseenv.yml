@@ -1,0 +1,25 @@
+---
+- name: install base rpm pack on {{ ansible_distribution|lower }}{{ ansible_distribution_major_version }}
+  yum: name={{item}} state=latest
+  with_items:
+    - curl
+    - dos2unix
+    - ftp
+    - make
+    - make
+    - gcc
+    - gcc-c++
+    - iotop
+    - lrzsz
+    - unzip
+    - vim
+    - sysstat
+    - libtool
+    - bash
+    - lbzip2
+    - gdb
+    - iftop
+    - nethogs
+    - expect
+    - atop
+    - python-devel
