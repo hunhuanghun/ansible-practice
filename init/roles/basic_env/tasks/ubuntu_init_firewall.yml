@@ -1,0 +1,10 @@
+---
+- name: create directory /etc/iptables 
+  shell: "[ -d /etc/iptables ] || mkdir /etc/iptables"
+
+- name: copy template iptables to remote machine
+  copy: src=iptables dest=/etc/iptables
+
+- name: Make the firewall come into effect
+  shell: "which iptables > /dev/null && iptables-restore < /etc/iptables/iptables || echo 'iptables has not be installed'"
+

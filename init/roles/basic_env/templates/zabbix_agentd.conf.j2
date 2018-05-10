@@ -1,0 +1,19 @@
+### Option: DebugLevel
+#	Specifies debug level
+#	0 - no debug
+#	1 - critical information
+#	2 - error information
+#	3 - warnings
+#	4 - for debugging (produces lots of information)
+#
+# Mandatory: no
+# Range: 0-4
+# Default:
+# DebugLevel=3
+
+LogFile=/tmp/zabbix_agentd.log
+Server={{ zabbix_server_ip }}
+ServerActive={{ zabbix_server_ip }}
+Timeout=10
+UnsafeUserParameters=1
+Include=/usr/local/zabbix/etc/zabbix_agentd.conf.d/

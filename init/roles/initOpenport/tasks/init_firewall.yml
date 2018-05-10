@@ -1,0 +1,6 @@
+---
+- name: backup /etc/sysconfig/iptables of remote machine 
+  shell: [ -f /etc/sysconfig/iptables ] && cp /etc/sysconfig/iptables /etc/sysconfig/iptables`date +%s`
+
+- name: copy template iptables to remote machine
+  copy: src=iptables dest=/etc/sysconfig/iptables

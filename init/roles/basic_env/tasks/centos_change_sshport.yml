@@ -1,0 +1,9 @@
+---
+- name: backup /etc/ssh/sshd_config
+  shell: "cp /etc/ssh/sshd_config /etc/ssh/sshd_config_bak`date +%s`"
+- name: change ssh open port
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: 'Port 22'
+    line: 'Port {{ssh_port}}'
+  notify: restart sshd

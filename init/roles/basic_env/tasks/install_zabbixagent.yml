@@ -1,0 +1,94 @@
+---
+- name: import {{ ansible_distribution }} variables
+  include_vars:
+    file: "{{ ansible_distribution|lower }}.yml"
+    name: Var
+
+- name: push zabbix agent pack
+  copy: src={{ item }} dest={{ tmp_path }}
+  with_items:
+    - "{{ zabbix_version }}.tar.gz"
+
+- name: install zabbix agent
+  shell: "{{ item }}"
+  with_items:
+    - "cd {{ tmp_path }} && tar -xzf {{ zabbix_version }}.tar.gz "
+    - "cd {{ tmp_path }}/{{ zabbix_version }} && ./configure --prefix={{ zabbix_install_path }} --enable-agent && make && make install"
+
+- name: modify zabbix_agentd.conf
+  template: src=zabbix_agentd.conf.j2 dest={{ zabbix_install_path }}/etc/zabbix_agentd.conf
+
+- name: create zabbix user
+  user: name=zabbix state=present
+
+- name: generate zabbix agent boot script on centos
+  shell: "{{ item }}"
+  with_items: 
+    - "cp {{ tmp_path }}/{{ zabbix_version }}/misc/init.d/fedora/core5/zabbix_agentd /etc/init.d/zabbix_agentd"
+    - "chkconfig --add zabbix_agentd"
+    - "chkconfig --level 345 zabbix_agentd on"
+  when: ansible_distribution|lower == "centos"
+
+- name: generate zabbix agent boot script on ubuntu
+  shell: "{{ item }}" 
+  with_items:
+    - "cp {{ tmp_path }}/{{ zabbix_version }}/misc/init.d/debian/zabbix-agent /etc/init.d/zabbix_agentd"
+    - "update-rc.d zabbix_agentd defaults"
+  when: ansible_distribution|lower == "ubuntu" and ansible_distribution_major_version != 16
+
+- name: generate zabbix agent boot script on ubuntu 16
+  shell: "{{ item }}"
+  with_items:
+    - "cp {{ tmp_path }}/{{ zabbix_version }}/misc/init.d/debian/zabbix-agent /etc/init.d/zabbix_agentd"
+#    - "systemctl enable zabbix_agentd"
+  when: ansible_distribution|lower == "ubuntu" and ansible_distribution_major_version == 16
+
+- name: judge iptable exists
+  shell: which iptables
+  register: result
+  ignore_errors: True
+
+- name: judge iptable config exists
+  shell: test -s Var.iptables_config 
+  register: result1
+  ignore_errors: True
+
+- name: insert iptables rule
+  lineinfile: 
+    dest: "{{ Var.iptables_config }}"
+    state: present 
+    regexp: '{{ zabbix_port }}'
+    insertafter: "^:OUTPUT" 
+    line: "-A INPUT -p tcp --dport {{ zabbix_port }} -j ACCEPT"
+  when: result is success and result1 is success
+
+- name: restore iptables rule
+  shell: iptables-restore {{ Var.iptables_config }}
+  when: result is success and result1 is success
+
+- name: judge /usr/local/sbin exists
+  shell: test -d /usr/local/sbin
+  register: result2
+  ignore_errors: True
+
+- name: judge /usr/local/bin exists
+  shell: test -d /usr/local/bin
+  register: result3
+  ignore_errors: True
+
+- name: make soft link to /usr/local/sbin
+  file: src={{ zabbix_install_path }}/sbin/{{ item }} dest=/usr/local/sbin/{{ item }} state=link
+  with_items:
+    - zabbix_agent
+    - zabbix_agentd
+  when: result2 is success
+
+- name: make soft link to /usr/local/bin
+  file: src={{ zabbix_install_path }}/bin/{{ item }} dest=/usr/local/bin/{{ item }} state=link
+  with_items:
+    - zabbix_get
+    - zabbix_sender
+  when: result3 is success
+
+- name: start zabbix agent
+  shell: /etc/init.d/zabbix_agentd start

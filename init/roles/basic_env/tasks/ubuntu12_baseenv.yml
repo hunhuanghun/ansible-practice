@@ -25,6 +25,7 @@
     - linux-image-generic
     - atop
     - python-dev
+    - dos2unix
 
 - name: bakup /etc/pam.d/commonsession
   shell: "[ -f /etc/pam.d/common-session ] && cp /etc/pam.d/common-session /etc/pam.d/common-session.bak_`date +%s`"
@@ -37,3 +38,4 @@
 
 - name: delete user ubuntu
   user: name=ubuntu state=absent
+  tags: deleteuser

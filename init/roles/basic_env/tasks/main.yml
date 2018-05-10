@@ -1,2 +1,11 @@
 ---
 - include_tasks: "{{ ansible_distribution|lower }}{{ ansible_distribution_major_version }}_baseenv.yml"
+  tags: baseenv
+- include_tasks: "{{ ansible_distribution|lower }}_init_firewall.yml"
+  tags: iptable
+- include_tasks: change_hostname.yml
+  tags: changehost
+- include_tasks: "{{ ansible_distribution|lower }}_change_sshport.yml"
+  tags: changessh
+- include_tasks: install_zabbixagent.yml
+  tags: zabbixagent

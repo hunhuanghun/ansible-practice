@@ -32,6 +32,7 @@
     - linux-image-generic
     - atop
     - python-dev
+    - dos2unix
 
 - name: delete user ubuntu
   user: name=ubuntu state=absent

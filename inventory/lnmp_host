@@ -1,8 +1,10 @@
 [centos6]
-192.168.141.102
+192.168.141.102 hostname="frxx001"
+[centos7]
+192.168.143.109 hostname="frxx002"
 [ubuntu12]
-192.168.141.52
+192.168.141.52 hostname="frxx003"
 [ubuntu14]
-192.168.141.175
+192.168.141.175 hostname="frxx004"
 [ubuntu16]
-192.168.143.216
+192.168.143.216 hostname="frxx005"

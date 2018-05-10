@@ -1,0 +1,5 @@
+zabbix_version: 'zabbix-2.2.3'
+zabbix_port: 10050
+zabbix_server_ip: '10.221.88.133'
+tmp_path: '/tmp'
+zabbix_install_path: '/usr/local/zabbix'
